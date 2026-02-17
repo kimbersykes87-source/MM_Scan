@@ -351,8 +351,8 @@
       };
 
       const CLASS_LABELS = Object.keys(CARD_DATA);
-      const CONFIDENCE_THRESHOLD = 0.8;
-      const REQUIRED_CONSECUTIVE = 3;
+      const CONFIDENCE_THRESHOLD = 0.92;
+      const REQUIRED_CONSECUTIVE = 4;
       const INFERENCE_INTERVAL_MS = 350;
       const CONFIRM_DISPLAY_MS = 1500;
 
@@ -455,7 +455,12 @@
       function captureFrame() {
         if (!video.videoWidth) return null;
         const c = ensureCanvas();
-        c.drawImage(video, 0, 0, 224, 224);
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const size = Math.min(vw, vh);
+        const sx = (vw - size) / 2;
+        const sy = (vh - size) / 2;
+        c.drawImage(video, sx, sy, size, size, 0, 0, 224, 224);
         return tf.browser.fromPixels(canvas).expandDims(0).div(255);
       }
 
