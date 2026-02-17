@@ -1,0 +1,55 @@
+playing_suit,rank,common_name,taste_highlight,nickname,scientific_name,one_liner
+Hearts,2,Espadín,"toasty, roasted, fruity","""Field Workhorse""",Agave angustifolia,"Spiky crowns, fuels eighty per cent of mezcal production."
+Hearts,3,Tobalá,"toasty, floral, fruity","""Hidden Gem""",Agave potatorum,"Small piñas on rocky hillsides, hand-cut, valued."
+Hearts,4,Tepextate,"toasty, herbal, spicy","""Wise Old Wizard""",Agave marmorata,"Hard to find, slow to grow, needs up to twenty five years."
+Hearts,5,Cuishe,"toasty, mineral, spicy","""Vertical Rebel""",Agave karwinskii,"Slim, tall towers of narrow leaves up to eight feet tall."
+Hearts,6,Barril,"toasty, green, mineral","""Burly Barrel""",Agave karwinskii,"Fat cylinder piñas squat in low valleys, built tough."
+Hearts,7,Madrecuixe,"clean, mineral, fruity","""Delicate Gymnast""",Agave karwinskii,"Slender, graceful leaves cling to steep slopes, lean and lithe."
+Hearts,8,Bicuixe,"clean, mineral, fruity","""Desert Lolipop"" ",Agave karwinskii,"Tall stalk, crown on top, hangs out on dry roadsides"
+Hearts,9,Tobaziche,"clean, herbal, spicy","""Tower of Spears""",Agave karwinskii,"Tall and cane-like, sharp tips and a skyward stance. "
+Hearts,10,Lumbre,"clean, herbal, fruity","""Ember Flare""",Agave sp. (unidentified),"Red leaf bases, green blades, bold contrast."
+Spades,2,Montana,"clean, herbal, mineral","""Mountain Tank""",Agave montana,"Thick, toothed leaves built for mountain weather."
+Spades,3,Arroqueño,"toasty, mineral, fruity","""White Guard""",Agave americana var. oaxacensis,"Pale, dusty leaves, tiny teeth, twenty-year wait."
+Spades,4,Sierra Negra,"toasty, mineral, spicy","""Thorny Titan""",Agave americana ,"Toothy edges, big rosette, often up to ten feet wide"
+Spades,5,Coyote,"toasty, herbal, spicy","""Jagged Prowler""",Agave americana,"Toothy margins, spiky rosette, blades for leaves."
+Spades,6,Mexicano,"clean, herbal, spicy","""Green Firework""",Agave rhodacantha,"Rigid leaf rays, green all the way to the tips."
+Spades,7,Masparillo ,"toasty, herbal, fruity","""Crag Ripper""",Agave maximiliana,Jagged-edged leaves built for rocky slopes.
+Spades,8,Papalote,"clean, herbal, fruity","""Copper Butterfly""",Agave cupreata,"Winglike leaves, wavy edges, and sharp, orange tips."
+Spades,9,Alto,"clean, herbal, fruity","""Soaring Monarch""",Agave inaequidens,"Crown of spines with a bold, sky-reaching silhouette."
+Spades,10,Salmiana,"clean, green, spicy","""Majestic Giant""",Agave salmiana,"Fleshy, broad leaves on a seriously wide rosette."
+Diamonds,2,Cimarrón,"clean, mineral, spicy","""Needle Wall""",Agave salmiana subsp. crassispina,"Armor in plant form, edge to tip, teeth and spine."
+Diamonds,3,Cenizo ,"clean, mineral, lactic","""Ashy Ghost""",Agave durangensis,"Silver leaves haunt rocky ground, twenty years to grow."
+Diamonds,4,Manso Sahuayo ,"toasty, mineral, savory","""Barbed Armor""",Agave americana sahuayensis,"Long, barbed leaves guard a stout piña, harvest takes care."
+Diamonds,5,Lyobaa Coyote,"smoky, herbal, funky","""Resting Place""",Agave lyoba,Named for Mitla’s Zapotec ‘place of rest’ on limestone.
+Diamonds,6,Churique,"funky, mineral, herbal","""Edge Runner""",Agave shrevei,Blue-gray lances with teeth down the edge.
+Diamonds,7,Weber Azul,"toasty, floral, fruity","""Blue Detour""",Agave tequilana var. weber,"A familiar blue (tequila) agave, seen from a new angle."
+Diamonds,8,Verde,"clean, green, spicy","""Green Beacon""",Agave gentryi,"Slow-growing green rosette, ten to twenty years to size."
+Diamonds,9,Warash,"clean, mineral, fruity","""Jade Slate""",Agave rhodacantha ,"Six feet tall, spreads wide, green turns grey blue"
+Diamonds,10,Rayo,"clean, roasted, fruity","""Blue Steel""",Agave americana ,"Steel blue rosette, stiff blades with toothed edges."
+Clubs,2,Henequén,"smoky, mineral, spicy","""Ironclad Survivor""",Agave fourcroydes,Sword like leaves stay tough in dry heat and sandy soils.
+Clubs,3,Pacífica,"toasty, herbal, spicy","""Wind Swept Spire""",Agave angustfolia var. pacifica ,Narrow leaves that look like a spire in the wind
+Clubs,4,Wocomahi,"toasty, mineral, herbal","""Relentless Gripper""",Agave wocomahi,"A patient agave, pined and rooted, built to stay put. "
+Clubs,5,Jabalí,"toasty, herbal, funky","""Wild Boar""",Agave convallis,"Low, stocky spines curl like tusks in valley floors and slopes. "
+Clubs,6,Lamparillo,"toasty, mineral, spicy","""Rugged Ribbon"" ",Agave asperrima,"Light green, curvy blades with a rough, grippy feel."
+Clubs,7,Tepemete,"toasty, fruity, funky","""Graceful Blade""",Agave angustifolia ,"Slender, arching leaves with calm, clean lines."
+Clubs,8,Chahuiqui,"clean, herbal, lactic","""Shaggy Tangle""",Agave multifilifera,"Light toned rosettes, known for threadlike white filaments"
+Clubs,9,Espadilla,"clean, roasted, lactic","""Blade Bouquet""",Agave angustifolia,"A tight rosette of blades, finished with a sharp spine."
+Clubs,10,Cincoañero,"clean, floral, fruity","""Restless Youth""",Agave cantala,"Scarce by nature, it shows up as a rare surprise pour."
+Hearts,A,Castilla,"toasty, herbal, savory","""Thorny Overlord""",Agave angostfolia,"A tight rosette of flat leaves, armed edge to edge."
+Diamonds,A,Chuparrosa,"clean, herbal, funky","""Nectar Signal"" ",Agave sp. (unidentified),"Chontal mountain maguey, hummingbird bait."
+Spades,A,Pulquero,"clean, green, funky","""Bulky Brute""",Agave americana var.  ,A broad leather-leaved giant that can top ten feet.
+Clubs,A,Pulque Chino,"clean, green, lactic","""Spiny Pinwheel""",Agave americana var.  ,"A classic century-plant silhouette: wide, stiff, spiky."
+Spades,J,Jimedor,,,,Yeilds ripe piñas
+Spades,Q,Maestra,,,,Tests the concoction
+Spades,K,Maestro,,,,Ignites the hearth
+Hearts,J,Jimedor,,,,Splits agave hearts
+Hearts,Q,Maestra,,,,Tastes the spirit
+Hearts,K,Maestro,,,,Fuels the roast
+Diamonds,J,Jimedor,,,,Removes the leaves
+Diamonds,Q,Maestra,,,,Distills the essence
+Diamonds,K,Maestro,,,,Stirs the mash
+Clubs,J,Jimedor,,,,Shears the leaves
+Clubs,Q,Maestra,,,,Strains the liquid
+Clubs,K,Maestro,,,,Grinds the fibers
+,JK(r),Bat,,,,Spreads agave pollen
+,JK(b),Bat,,,,Spreads agave pollen

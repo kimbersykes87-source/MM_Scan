@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#272926">
+  <title>Scan Card — Mezcalómano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-dark: #272926;
+      --color-olive: #7B815C;
+      --color-yellow: #A29037;
+      --color-terracotta: #B86744;
+      --color-white: #FFFFFF;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-16: 64px;
+      --divider-opacity: 0.25;
+      --divider: 1px solid rgba(255, 255, 255, var(--divider-opacity));
+      --font-family: 'Open Sans Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-weight-regular: 400;
+      --font-weight-semibold: 600;
+      --bg: var(--color-dark);
+      --accent: var(--color-yellow);
+      --accent-dim: #8b7340;
+      --text: #f5f0e6;
+      --text-muted: #a09888;
+      --error: #c45c5c;
+      --radius: 12px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; -webkit-tap-highlight-color: transparent; font-family: var(--font-family); }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Mezcalomano Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--color-dark);
+      z-index: 1000;
+      min-height: 88px;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: var(--safe-top);
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      max-height: 80px;
+    }
+    .header-logo img { height: 100%; width: auto; max-width: 240px; }
+
+    /* Mezcalomano Footer */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: var(--space-4);
+      padding-bottom: calc(var(--space-4) + var(--safe-bottom));
+      border-top: var(--divider);
+      background-color: var(--color-dark);
+      z-index: 100;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+    }
+    .footer-social { display: flex; gap: var(--space-4); align-items: center; }
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+    .footer-social a:hover { opacity: 1; }
+    .footer-social img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+    .footer-copyright { font-size: 0.8125rem; color: rgba(255, 255, 255, 0.5); margin: 0; }
+
+    /* Viewfinder - fills space between fixed header and footer */
+    .viewfinder-wrap {
+      flex: 1;
+      position: relative;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      margin-top: 88px;
+      margin-bottom: 72px;
+    }
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .viewfinder-wrap.loading #video { opacity: 0.3; }
+    .viewfinder-wrap.has-stream #video { opacity: 1; }
+
+    /* Frame guide */
+    .frame-guide {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .frame-guide rect {
+      width: 70%;
+      max-width: 280px;
+      aspect-ratio: 2.5/3.5;
+      border: 2px solid rgba(196, 163, 90, 0.5);
+      border-radius: 8px;
+      fill: none;
+    }
+
+    /* Overlays */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(26, 26, 20, 0.92);
+      z-index: 20;
+      padding: 24px;
+      text-align: center;
+    }
+    .overlay.hidden { display: none; }
+    .overlay .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--accent-dim);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .overlay h2 {
+      font-family: var(--font-family);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .overlay p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .overlay.error h2 { color: var(--error); }
+    .overlay.error .spinner { display: none; }
+
+    /* Confirmation overlay */
+    .confirm-overlay {
+      background: rgba(26, 26, 20, 0.95);
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .confirm-overlay .card-name {
+      font-family: var(--font-family);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .confirm-overlay .card-species {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .viewfinder-hint {
+      position: absolute;
+      bottom: calc(72px + var(--space-4));
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="https://mezcalomano.com/" class="header-logo" aria-label="Mezcalómano Home">
+      <img src="https://mezcalomano.com/assets/brand/logos/mezcalomano_lockup_stacked_dark.svg" alt="Mezcalómano" />
+    </a>
+  </header>
+
+  <main class="viewfinder-wrap loading" id="viewfinder">
+    <video id="video" playsinline autoplay muted></video>
+    <div class="frame-guide" aria-hidden="true">
+      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect x="15" y="20" width="70" height="80" rx="4" />
+      </svg>
+    </div>
+
+    <div class="overlay" id="loading-overlay">
+      <div class="spinner"></div>
+      <h2 id="loading-title">Loading…</h2>
+      <p id="loading-desc">Initializing camera and model</p>
+    </div>
+
+    <div class="overlay hidden" id="error-overlay">
+      <h2>Camera access needed</h2>
+      <p id="error-msg">Allow camera access to scan cards. This app runs entirely on your device—no images are uploaded.</p>
+    </div>
+
+    <div class="overlay hidden confirm-overlay" id="confirm-overlay">
+      <p class="card-name" id="confirm-name">—</p>
+      <p class="card-species" id="confirm-species">—</p>
+    </div>
+    <p class="viewfinder-hint">Hold a card in the frame to identify it</p>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/mezcalomano/" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <img src="https://mezcalomano.com/assets/icons/icon_instagram.svg" alt="" width="24" height="24" />
+        </a>
+        <a href="https://www.tiktok.com/@mezcalomano" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+          <img src="https://mezcalomano.com/assets/icons/icon_tiktok.svg" alt="" width="24" height="24" />
+        </a>
+      </div>
+      <p class="footer-copyright">&copy; 2026 Mezcalómano. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const BASE_URL = 'https://mezcalomano.com/directory/';
+
+      function toSlug(name) {
+        return (name || '').trim().toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '_');
+      }
+
+      const CARD_DATA = {
+        spades_A:  { displayName: 'Pulquero',    scientificName: 'Agave americana var.', slug: 'pulquero' },
+        spades_K:  { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
+        spades_Q:  { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
+        spades_J:  { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
+        spades_10: { displayName: 'Salmiana',    scientificName: 'Agave salmiana', slug: 'salmiana' },
+        spades_9:  { displayName: 'Alto',        scientificName: 'Agave inaequidens', slug: 'alto' },
+        spades_8:  { displayName: 'Papalote',    scientificName: 'Agave cupreata', slug: 'papalote' },
+        spades_7:  { displayName: 'Masparillo',  scientificName: 'Agave maximiliana', slug: 'masparillo' },
+        spades_6:  { displayName: 'Mexicano',    scientificName: 'Agave rhodacantha', slug: 'mexicano' },
+        spades_5:  { displayName: 'Coyote',      scientificName: 'Agave americana', slug: 'coyote' },
+        spades_4:  { displayName: 'Sierra Negra', scientificName: 'Agave americana', slug: 'sierra_negra' },
+        spades_3:  { displayName: 'Arroqueño',   scientificName: 'Agave americana var. oaxacensis', slug: 'arroqueno' },
+        spades_2:  { displayName: 'Montana',     scientificName: 'Agave montana', slug: 'montana' },
+        hearts_A:  { displayName: 'Castilla',    scientificName: 'Agave angostfolia', slug: 'castilla' },
+        hearts_K:  { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
+        hearts_Q:  { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
+        hearts_J:  { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
+        hearts_10: { displayName: 'Lumbre',      scientificName: 'Agave sp.', slug: 'lumbre' },
+        hearts_9:  { displayName: 'Tobaziche',   scientificName: 'Agave karwinskii', slug: 'tobaziche' },
+        hearts_8:  { displayName: 'Bicuixe',     scientificName: 'Agave karwinskii', slug: 'bicuixe' },
+        hearts_7:  { displayName: 'Madrecuixe',  scientificName: 'Agave karwinskii', slug: 'madrecuixe' },
+        hearts_6:  { displayName: 'Barril',      scientificName: 'Agave karwinskii', slug: 'barril' },
+        hearts_5:  { displayName: 'Cuishe',      scientificName: 'Agave karwinskii', slug: 'cuishe' },
+        hearts_4:  { displayName: 'Tepextate',   scientificName: 'Agave marmorata', slug: 'tepextate' },
+        hearts_3:  { displayName: 'Tobalá',      scientificName: 'Agave potatorum', slug: 'tobala' },
+        hearts_2:  { displayName: 'Espadín',     scientificName: 'Agave angustifolia', slug: 'espadin' },
+        clubs_A:   { displayName: 'Pulque Chino', scientificName: 'Agave americana var.', slug: 'pulque_chino' },
+        clubs_K:   { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
+        clubs_Q:   { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
+        clubs_J:   { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
+        clubs_10:  { displayName: 'Cincoañero',  scientificName: 'Agave cantala', slug: 'cincoanero' },
+        clubs_9:   { displayName: 'Espadilla',   scientificName: 'Agave angustifolia', slug: 'espadilla' },
+        clubs_8:   { displayName: 'Chahuiqui',   scientificName: 'Agave multifilifera', slug: 'chahuiqui' },
+        clubs_7:   { displayName: 'Tepemete',    scientificName: 'Agave angustifolia', slug: 'tepemete' },
+        clubs_6:   { displayName: 'Lamparillo',  scientificName: 'Agave asperrima', slug: 'lamparillo' },
+        clubs_5:   { displayName: 'Jabalí',      scientificName: 'Agave convallis', slug: 'jabali' },
+        clubs_4:   { displayName: 'Wocomahi',    scientificName: 'Agave wocomahi', slug: 'wocomahi' },
+        clubs_3:   { displayName: 'Pacífica',    scientificName: 'Agave angustifolia var. pacifica', slug: 'pacifica' },
+        clubs_2:   { displayName: 'Henequén',    scientificName: 'Agave fourcroydes', slug: 'henequen' },
+        diamonds_A:  { displayName: 'Chuparrosa', scientificName: 'Agave sp.', slug: 'chuparrosa' },
+        diamonds_K:  { displayName: 'Maestro',   scientificName: '', slug: 'maestro' },
+        diamonds_Q: { displayName: 'Maestra',    scientificName: '', slug: 'maestra' },
+        diamonds_J: { displayName: 'Jimedor',    scientificName: '', slug: 'jimedor' },
+        diamonds_10: { displayName: 'Rayo',      scientificName: 'Agave americana', slug: 'rayo' },
+        diamonds_9:  { displayName: 'Warash',    scientificName: 'Agave rhodacantha', slug: 'warash' },
+        diamonds_8:  { displayName: 'Verde',     scientificName: 'Agave gentryi', slug: 'verde' },
+        diamonds_7:  { displayName: 'Weber Azul', scientificName: 'Agave tequilana var. weber', slug: 'weber_azul' },
+        diamonds_6:  { displayName: 'Churique',  scientificName: 'Agave shrevei', slug: 'churique' },
+        diamonds_5:  { displayName: 'Lyobaa Coyote', scientificName: 'Agave lyoba', slug: 'lyobaa_coyote' },
+        diamonds_4:  { displayName: 'Manso Sahuayo', scientificName: 'Agave americana sahuayensis', slug: 'manso_sahuayo' },
+        diamonds_3:  { displayName: 'Cenizo',    scientificName: 'Agave durangensis', slug: 'cenizo' },
+        diamonds_2:  { displayName: 'Cimarrón',  scientificName: 'Agave salmiana subsp. crassispina', slug: 'cimarron' },
+        joker_black: { displayName: 'Bat',       scientificName: '', slug: 'bat' },
+        joker_red:   { displayName: 'Bat',       scientificName: '', slug: 'bat' },
+      };
+
+      const CLASS_LABELS = Object.keys(CARD_DATA);
+      const CONFIDENCE_THRESHOLD = 0.85;
+      const REQUIRED_CONSECUTIVE = 3;
+      const INFERENCE_INTERVAL_MS = 350;
+      const CONFIRM_DISPLAY_MS = 1500;
+
+      const params = new URLSearchParams(location.search);
+      const DEMO_MODE = params.get('demo') === '1';
+
+      const $ = id => document.getElementById(id);
+      const viewfinder = $('viewfinder');
+      const video = $('video');
+      const loadingOverlay = $('loading-overlay');
+      const errorOverlay = $('error-overlay');
+      const confirmOverlay = $('confirm-overlay');
+      const loadingTitle = $('loading-title');
+      const loadingDesc = $('loading-desc');
+      const errorMsg = $('error-msg');
+      const confirmName = $('confirm-name');
+      const confirmSpecies = $('confirm-species');
+
+      function setStatus(text) { /* unused */ }
+      function showOverlay(el) { loadingOverlay.classList.add('hidden'); errorOverlay.classList.add('hidden'); confirmOverlay.classList.add('hidden'); el.classList.remove('hidden'); }
+      function hideOverlays() { loadingOverlay.classList.add('hidden'); errorOverlay.classList.add('hidden'); confirmOverlay.classList.add('hidden'); }
+
+      function showError(msg) {
+        errorMsg.textContent = msg;
+        showOverlay(errorOverlay);
+        setStatus('Error');
+      }
+
+      async function initCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+            audio: false
+          });
+          video.srcObject = stream;
+          viewfinder.classList.add('has-stream');
+          viewfinder.classList.remove('loading');
+          setStatus('Ready');
+          return true;
+        } catch (e) {
+          showError('Camera access was denied. Please enable it in your browser settings to scan cards.');
+          setStatus('Camera denied');
+          return false;
+        }
+      }
+
+      let customModel = null;
+      let modelClasses = null;
+
+      async function loadModel() {
+        const modelUrl = './model/model.json';
+        const metadataUrl = './model/metadata.json';
+        try {
+          const modelRes = await fetch(modelUrl);
+          if (!modelRes.ok) throw new Error('Model not found');
+          const metaRes = await fetch(metadataUrl).then(r => r.ok ? r.json() : null).catch(() => null);
+          const model = await tf.loadLayersModel(modelUrl);
+          const metadata = metaRes && metaRes.labels ? metaRes : { labels: CLASS_LABELS };
+          customModel = model;
+          modelClasses = Array.isArray(metadata.labels) ? metadata.labels : CLASS_LABELS;
+          return true;
+        } catch (e) {
+          if (DEMO_MODE) {
+            setStatus('Demo mode');
+            return false;
+          }
+          loadingTitle.textContent = 'Model not found';
+          loadingDesc.textContent = 'Add a trained TensorFlow.js model to the model/ folder (model.json, metadata.json, weights). See README.';
+          return false;
+        }
+      }
+
+      let canvas = null;
+      let ctx = null;
+
+      function ensureCanvas() {
+        if (!canvas) {
+          canvas = document.createElement('canvas');
+          canvas.width = 224;
+          canvas.height = 224;
+          ctx = canvas.getContext('2d');
+        }
+        return ctx;
+      }
+
+      function captureFrame() {
+        if (!video.videoWidth) return null;
+        const c = ensureCanvas();
+        c.drawImage(video, 0, 0, 224, 224);
+        return tf.browser.fromPixels(canvas).expandDims(0).div(255);
+      }
+
+      let lastClass = null;
+      let consecutiveCount = 0;
+      let inferenceScheduled = false;
+
+      function predictCustom(tensor) {
+        const pred = customModel.predict(tensor);
+        const probs = pred.dataSync ? pred.dataSync() : Array.from(pred.dataSync());
+        pred.dispose();
+        let maxIdx = 0;
+        let maxProb = 0;
+        for (let i = 0; i < probs.length; i++) {
+          if (probs[i] > maxProb) { maxProb = probs[i]; maxIdx = i; }
+        }
+        const label = modelClasses[maxIdx];
+        return label ? { label, confidence: maxProb } : null;
+      }
+
+      function runInference() {
+        if (inferenceScheduled) return;
+        inferenceScheduled = true;
+
+        const run = () => {
+          inferenceScheduled = false;
+          if (!video.videoWidth || !customModel) return;
+          const tensor = captureFrame();
+          if (!tensor) return;
+          let result = null;
+          try {
+            result = predictCustom(tensor);
+          } finally {
+            tensor.dispose();
+          }
+          if (!result || result.confidence < CONFIDENCE_THRESHOLD) {
+            lastClass = null;
+            consecutiveCount = 0;
+            return;
+          }
+          if (result.label === lastClass) {
+            consecutiveCount++;
+            if (consecutiveCount >= REQUIRED_CONSECUTIVE) {
+              onCardDetected(result.label);
+              consecutiveCount = 0;
+            }
+          } else {
+            lastClass = result.label;
+            consecutiveCount = 1;
+          }
+        };
+
+        setTimeout(run, INFERENCE_INTERVAL_MS);
+      }
+
+      function onCardDetected(classLabel) {
+        const data = CARD_DATA[classLabel];
+        if (!data) return;
+        const url = BASE_URL + data.slug;
+        confirmName.textContent = data.displayName;
+        confirmSpecies.textContent = data.scientificName || '';
+        showOverlay(confirmOverlay);
+        setStatus('Detected: ' + data.displayName);
+        setTimeout(() => {
+          window.location.href = url;
+        }, CONFIRM_DISPLAY_MS);
+      }
+
+      function startInferenceLoop() {
+        setInterval(() => runInference(), INFERENCE_INTERVAL_MS);
+      }
+
+      function initDemoMode() {
+        viewfinder.addEventListener('click', (e) => {
+          if (confirmOverlay.classList.contains('hidden') && customModel === null) {
+            onCardDetected('spades_9');
+          }
+        });
+        setStatus('Demo — tap to simulate');
+        loadingTitle.textContent = 'Demo mode';
+        loadingDesc.textContent = 'Tap the viewfinder to simulate detecting Alto (9♠). Add a trained model to enable real scanning.';
+      }
+
+      async function main() {
+        loadingTitle.textContent = 'Loading…';
+        loadingDesc.textContent = 'Initializing camera and model';
+        showOverlay(loadingOverlay);
+
+        const camOk = await initCamera();
+        if (!camOk) return;
+
+        await loadModel();
+        if (!customModel) {
+          if (DEMO_MODE) {
+            hideOverlays();
+            initDemoMode();
+            return;
+          }
+          return;
+        }
+
+        hideOverlays();
+        startInferenceLoop();
+      }
+
+      main();
+    })();
+  </script>
+</body>
+</html>
