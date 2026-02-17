@@ -139,7 +139,7 @@
     .frame-guide rect {
       fill: none;
       stroke: #A29037;
-      stroke-width: 3;
+      stroke-width: 2;
       rx: 12;
       ry: 12;
     }
@@ -257,8 +257,8 @@
   <main class="viewfinder-wrap loading" id="viewfinder">
     <video id="video" playsinline autoplay muted></video>
     <div class="frame-guide" aria-hidden="true">
-      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect x="15" y="15" width="70" height="90" rx="12" ry="12" fill="none" stroke="#A29037" stroke-width="3" />
+      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+        <rect x="25" y="25" width="50" height="50" rx="12" ry="12" fill="none" stroke="#A29037" stroke-width="2" />
       </svg>
     </div>
 
@@ -305,68 +305,63 @@
       'use strict';
 
       const BASE_URL = 'https://mezcalomano.com/directory/';
-
-      function toSlug(name) {
-        return (name || '').trim().toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, '_');
-      }
+      const HOME_URL = 'https://mezcalomano.com';
 
       const CARD_DATA = {
-        spades_A:  { displayName: 'Pulquero',    scientificName: 'Agave americana var.', slug: 'pulquero' },
-        spades_K:  { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
-        spades_Q:  { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
-        spades_J:  { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
-        spades_10: { displayName: 'Salmiana',    scientificName: 'Agave salmiana', slug: 'salmiana' },
-        spades_9:  { displayName: 'Alto',        scientificName: 'Agave inaequidens', slug: 'alto' },
-        spades_8:  { displayName: 'Papalote',    scientificName: 'Agave cupreata', slug: 'papalote' },
-        spades_7:  { displayName: 'Masparillo',  scientificName: 'Agave maximiliana', slug: 'masparillo' },
-        spades_6:  { displayName: 'Mexicano',    scientificName: 'Agave rhodacantha', slug: 'mexicano' },
-        spades_5:  { displayName: 'Coyote',      scientificName: 'Agave americana', slug: 'coyote' },
-        spades_4:  { displayName: 'Sierra Negra', scientificName: 'Agave americana', slug: 'sierra_negra' },
-        spades_3:  { displayName: 'Arroqueño',   scientificName: 'Agave americana var. oaxacensis', slug: 'arroqueno' },
-        spades_2:  { displayName: 'Montana',     scientificName: 'Agave montana', slug: 'montana' },
-        hearts_A:  { displayName: 'Castilla',    scientificName: 'Agave angostfolia', slug: 'castilla' },
-        hearts_K:  { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
-        hearts_Q:  { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
-        hearts_J:  { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
-        hearts_10: { displayName: 'Lumbre',      scientificName: 'Agave sp.', slug: 'lumbre' },
-        hearts_9:  { displayName: 'Tobaziche',   scientificName: 'Agave karwinskii', slug: 'tobaziche' },
-        hearts_8:  { displayName: 'Bicuixe',     scientificName: 'Agave karwinskii', slug: 'bicuixe' },
-        hearts_7:  { displayName: 'Madrecuixe',  scientificName: 'Agave karwinskii', slug: 'madrecuixe' },
-        hearts_6:  { displayName: 'Barril',      scientificName: 'Agave karwinskii', slug: 'barril' },
-        hearts_5:  { displayName: 'Cuishe',      scientificName: 'Agave karwinskii', slug: 'cuishe' },
-        hearts_4:  { displayName: 'Tepextate',   scientificName: 'Agave marmorata', slug: 'tepextate' },
-        hearts_3:  { displayName: 'Tobalá',      scientificName: 'Agave potatorum', slug: 'tobala' },
-        hearts_2:  { displayName: 'Espadín',     scientificName: 'Agave angustifolia', slug: 'espadin' },
-        clubs_A:   { displayName: 'Pulque Chino', scientificName: 'Agave americana var.', slug: 'pulque_chino' },
-        clubs_K:   { displayName: 'Maestro',     scientificName: '', slug: 'maestro' },
-        clubs_Q:   { displayName: 'Maestra',     scientificName: '', slug: 'maestra' },
-        clubs_J:   { displayName: 'Jimedor',     scientificName: '', slug: 'jimedor' },
-        clubs_10:  { displayName: 'Cincoañero',  scientificName: 'Agave cantala', slug: 'cincoanero' },
-        clubs_9:   { displayName: 'Espadilla',   scientificName: 'Agave angustifolia', slug: 'espadilla' },
-        clubs_8:   { displayName: 'Chahuiqui',   scientificName: 'Agave multifilifera', slug: 'chahuiqui' },
-        clubs_7:   { displayName: 'Tepemete',    scientificName: 'Agave angustifolia', slug: 'tepemete' },
-        clubs_6:   { displayName: 'Lamparillo',  scientificName: 'Agave asperrima', slug: 'lamparillo' },
-        clubs_5:   { displayName: 'Jabalí',      scientificName: 'Agave convallis', slug: 'jabali' },
-        clubs_4:   { displayName: 'Wocomahi',    scientificName: 'Agave wocomahi', slug: 'wocomahi' },
-        clubs_3:   { displayName: 'Pacífica',    scientificName: 'Agave angustifolia var. pacifica', slug: 'pacifica' },
-        clubs_2:   { displayName: 'Henequén',    scientificName: 'Agave fourcroydes', slug: 'henequen' },
-        diamonds_A:  { displayName: 'Chuparrosa', scientificName: 'Agave sp.', slug: 'chuparrosa' },
-        diamonds_K:  { displayName: 'Maestro',   scientificName: '', slug: 'maestro' },
-        diamonds_Q: { displayName: 'Maestra',    scientificName: '', slug: 'maestra' },
-        diamonds_J: { displayName: 'Jimedor',    scientificName: '', slug: 'jimedor' },
-        diamonds_10: { displayName: 'Rayo',      scientificName: 'Agave americana', slug: 'rayo' },
-        diamonds_9:  { displayName: 'Warash',    scientificName: 'Agave rhodacantha', slug: 'warash' },
-        diamonds_8:  { displayName: 'Verde',     scientificName: 'Agave gentryi', slug: 'verde' },
-        diamonds_7:  { displayName: 'Weber Azul', scientificName: 'Agave tequilana var. weber', slug: 'weber_azul' },
-        diamonds_6:  { displayName: 'Churique',  scientificName: 'Agave shrevei', slug: 'churique' },
-        diamonds_5:  { displayName: 'Lyobaa Coyote', scientificName: 'Agave lyoba', slug: 'lyobaa_coyote' },
-        diamonds_4:  { displayName: 'Manso Sahuayo', scientificName: 'Agave americana sahuayensis', slug: 'manso_sahuayo' },
-        diamonds_3:  { displayName: 'Cenizo',    scientificName: 'Agave durangensis', slug: 'cenizo' },
-        diamonds_2:  { displayName: 'Cimarrón',  scientificName: 'Agave salmiana subsp. crassispina', slug: 'cimarron' },
-        joker_black: { displayName: 'Bat',       scientificName: '', slug: 'bat' },
-        joker_red:   { displayName: 'Bat',       scientificName: '', slug: 'bat' },
+        spades_A:  { displayName: 'Pulquero',    scientificName: 'Agave americana var.', url: BASE_URL + 'pulquero' },
+        spades_K:  { displayName: 'Maestro',     scientificName: '', url: HOME_URL },
+        spades_Q:  { displayName: 'Maestra',     scientificName: '', url: HOME_URL },
+        spades_J:  { displayName: 'Jimedor',     scientificName: '', url: HOME_URL },
+        spades_10: { displayName: 'Salmiana',    scientificName: 'Agave salmiana', url: BASE_URL + 'salmiana' },
+        spades_9:  { displayName: 'Alto',        scientificName: 'Agave inaequidens', url: BASE_URL + 'alto' },
+        spades_8:  { displayName: 'Papalote',    scientificName: 'Agave cupreata', url: BASE_URL + 'papalote' },
+        spades_7:  { displayName: 'Masparillo',  scientificName: 'Agave maximiliana', url: BASE_URL + 'masparillo' },
+        spades_6:  { displayName: 'Mexicano',    scientificName: 'Agave rhodacantha', url: BASE_URL + 'mexicano' },
+        spades_5:  { displayName: 'Coyote',      scientificName: 'Agave americana', url: BASE_URL + 'coyote' },
+        spades_4:  { displayName: 'Sierra Negra', scientificName: 'Agave americana', url: BASE_URL + 'sierra_negra' },
+        spades_3:  { displayName: 'Arroqueño',   scientificName: 'Agave americana var. oaxacensis', url: BASE_URL + 'arroqueno' },
+        spades_2:  { displayName: 'Montana',     scientificName: 'Agave montana', url: BASE_URL + 'mountain_agave' },
+        hearts_A:  { displayName: 'Castilla',    scientificName: 'Agave angostfolia', url: BASE_URL + 'castilla' },
+        hearts_K:  { displayName: 'Maestro',     scientificName: '', url: HOME_URL },
+        hearts_Q:  { displayName: 'Maestra',     scientificName: '', url: HOME_URL },
+        hearts_J:  { displayName: 'Jimedor',     scientificName: '', url: HOME_URL },
+        hearts_10: { displayName: 'Lumbre',      scientificName: 'Agave sp.', url: BASE_URL + 'lumbre' },
+        hearts_9:  { displayName: 'Tobaziche',   scientificName: 'Agave karwinskii', url: BASE_URL + 'tobaziche' },
+        hearts_8:  { displayName: 'Bicuixe',     scientificName: 'Agave karwinskii', url: BASE_URL + 'bicuixe' },
+        hearts_7:  { displayName: 'Madrecuixe',  scientificName: 'Agave karwinskii', url: BASE_URL + 'madrecuixe' },
+        hearts_6:  { displayName: 'Barril',      scientificName: 'Agave karwinskii', url: BASE_URL + 'barril' },
+        hearts_5:  { displayName: 'Cuishe',      scientificName: 'Agave karwinskii', url: BASE_URL + 'cuishe' },
+        hearts_4:  { displayName: 'Tepextate',   scientificName: 'Agave marmorata', url: BASE_URL + 'tepeztate' },
+        hearts_3:  { displayName: 'Tobalá',      scientificName: 'Agave potatorum', url: BASE_URL + 'tobala' },
+        hearts_2:  { displayName: 'Espadín',     scientificName: 'Agave angustifolia', url: BASE_URL + 'espadin' },
+        clubs_A:   { displayName: 'Pulque Chino', scientificName: 'Agave americana var.', url: BASE_URL + 'pulque_chino' },
+        clubs_K:   { displayName: 'Maestro',     scientificName: '', url: HOME_URL },
+        clubs_Q:   { displayName: 'Maestra',     scientificName: '', url: HOME_URL },
+        clubs_J:   { displayName: 'Jimedor',     scientificName: '', url: HOME_URL },
+        clubs_10:  { displayName: 'Cincoañero',  scientificName: 'Agave cantala', url: BASE_URL + 'cincoanero' },
+        clubs_9:   { displayName: 'Espadilla',   scientificName: 'Agave angustifolia', url: BASE_URL + 'espadita' },
+        clubs_8:   { displayName: 'Chahuiqui',   scientificName: 'Agave multifilifera', url: BASE_URL + 'chahuiqui' },
+        clubs_7:   { displayName: 'Tepemete',    scientificName: 'Agave angustifolia', url: BASE_URL + 'tepemete' },
+        clubs_6:   { displayName: 'Lamparillo',  scientificName: 'Agave asperrima', url: BASE_URL + 'lamparillo' },
+        clubs_5:   { displayName: 'Jabalí',      scientificName: 'Agave convallis', url: BASE_URL + 'jabali' },
+        clubs_4:   { displayName: 'Wocomahi',    scientificName: 'Agave wocomahi', url: BASE_URL + 'wocomahi' },
+        clubs_3:   { displayName: 'Pacífica',    scientificName: 'Agave angustifolia var. pacifica', url: BASE_URL + 'pacifica' },
+        clubs_2:   { displayName: 'Henequén',    scientificName: 'Agave fourcroydes', url: BASE_URL + 'henequen' },
+        diamonds_A:  { displayName: 'Chuparrosa', scientificName: 'Agave sp.', url: BASE_URL + 'chuparrosa' },
+        diamonds_K:  { displayName: 'Maestro',   scientificName: '', url: HOME_URL },
+        diamonds_Q: { displayName: 'Maestra',    scientificName: '', url: HOME_URL },
+        diamonds_J: { displayName: 'Jimedor',    scientificName: '', url: HOME_URL },
+        diamonds_10: { displayName: 'Rayo',      scientificName: 'Agave americana', url: BASE_URL + 'rayo' },
+        diamonds_9:  { displayName: 'Warash',    scientificName: 'Agave rhodacantha', url: BASE_URL + 'warash' },
+        diamonds_8:  { displayName: 'Verde',     scientificName: 'Agave gentryi', url: BASE_URL + 'maguey_verde' },
+        diamonds_7:  { displayName: 'Weber Azul', scientificName: 'Agave tequilana var. weber', url: BASE_URL + 'blue_weber' },
+        diamonds_6:  { displayName: 'Churique',  scientificName: 'Agave shrevei', url: BASE_URL + 'lechuguilla_ceniza' },
+        diamonds_5:  { displayName: 'Lyobaa Coyote', scientificName: 'Agave lyoba', url: BASE_URL + 'lechuguilla_de_la_sierra' },
+        diamonds_4:  { displayName: 'Manso Sahuayo', scientificName: 'Agave americana sahuayensis', url: BASE_URL + 'chato_de_sahuayo' },
+        diamonds_3:  { displayName: 'Cenizo',    scientificName: 'Agave durangensis', url: BASE_URL + 'cenizo_durangensis' },
+        diamonds_2:  { displayName: 'Cimarrón',  scientificName: 'Agave salmiana subsp. crassispina', url: BASE_URL + 'cimarron' },
+        joker_black: { displayName: 'Bat',       scientificName: '', url: HOME_URL },
+        joker_red:   { displayName: 'Bat',       scientificName: '', url: HOME_URL },
       };
 
       const CLASS_LABELS = Object.keys(CARD_DATA);
@@ -546,7 +541,7 @@
       function onCardDetected(classLabel) {
         const data = CARD_DATA[classLabel];
         if (!data) return;
-        const url = BASE_URL + data.slug;
+        const url = data.url;
         confirmName.textContent = data.displayName;
         confirmSpecies.textContent = data.scientificName || '';
         liveFeedback.classList.add('hidden');
